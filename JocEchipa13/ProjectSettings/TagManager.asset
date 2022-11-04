@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -40,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Map
+    uniqueID: 1559953933
+    locked: 0
+  - name: Enemies
+    uniqueID: 2443676715
+    locked: 0
+  - name: Player
+    uniqueID: 1507437961
     locked: 0
