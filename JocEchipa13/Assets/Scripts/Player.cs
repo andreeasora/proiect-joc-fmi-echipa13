@@ -52,4 +52,14 @@ public class Player : MonoBehaviour
             bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * Bullet.bulletSpeed, ForceMode2D.Impulse);
         }
     }
+
+    void OnCollisionEnter2D(Collision2D collision){
+        var other = collision.gameObject;
+
+        if (other.CompareTag("Enemy")){
+            print("Player Hit");
+        }
+    }
+
+
 }

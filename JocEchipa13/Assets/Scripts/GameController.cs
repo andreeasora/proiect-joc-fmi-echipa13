@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
     }
 
     private void SpawnEnemy() {
+        // functions places an enemy in a random position in a valid spawn area
         Enemy enemy = enemyPool.Pool.Get();
         BoxCollider2D area = RandomAreaSelect();
 
@@ -63,6 +64,7 @@ public class GameController : MonoBehaviour
     }
 
     private BoxCollider2D RandomAreaSelect() {
+        // Function returns a randomly selected area
         var sum = enemySpawnAreas.Select(x => x.Chance).Sum();
 
         var point = Random.value * sum;
