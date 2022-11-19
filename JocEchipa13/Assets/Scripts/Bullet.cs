@@ -11,5 +11,12 @@ public class Bullet : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         BulletPool.Pool.Release(this);
+        
+        var other = collision.gameObject;
+
+        if (other.CompareTag("Enemy")){
+            Enemy enemy = other.GetComponent<Enemy>();
+            enemy.releaseEnemy();
+        }
     }
 }
