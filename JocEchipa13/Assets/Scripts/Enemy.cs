@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
         EnemyPool.Pool.Release(this);
     }
     void Start() {
-        Physics2D.IgnoreLayerCollision(6, 7);
         playerObj = GameObject.Find("Player").transform;
         rb = this.GetComponent<Rigidbody2D>();
     }
