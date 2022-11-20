@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
         var mousePos = Mouse.current.position.ReadValue();
         var playerPos = Camera.main.WorldToScreenPoint(transform.position);
         var playerToMouse = new Vector3(mousePos.x - playerPos.x, mousePos.y - playerPos.y, transform.up.z);
-        float anglesToRotate = Mathf.Atan2(playerToMouse.y, playerToMouse.x) * Mathf.Rad2Deg - 90.0f; 
+        float anglesToRotate = Mathf.Atan2(playerToMouse.y, playerToMouse.x) * Mathf.Rad2Deg - 90.0f;
         rigidBody.rotation = anglesToRotate;
     }
 
@@ -53,10 +53,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision){
+    void OnCollisionEnter2D(Collision2D collision)
+    {
         var other = collision.gameObject;
 
-        if (other.CompareTag("Enemy")){
+        if (other.CompareTag("Enemy"))
+        {
             print("Player Hit");
         }
     }
