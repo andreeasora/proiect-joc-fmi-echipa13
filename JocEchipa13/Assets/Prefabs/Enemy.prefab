@@ -103,9 +103,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0062256753, y: 0.039089024}
+  m_Offset: {x: -0.002685815, y: 0.00015038252}
   serializedVersion: 2
-  m_Radius: 0.45849538
+  m_Radius: 0.30038103
 --- !u!50 &927216812062752229
 Rigidbody2D:
   serializedVersion: 4
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 5
-  radius: 0.5
+  radius: 0.3
   height: 2
   canMove: 1
   maxSpeed: 5
@@ -203,7 +203,7 @@ MonoBehaviour:
   maxAcceleration: 1000000
   rotationSpeed: 360
   slowdownDistance: 0.6
-  pickNextWaypointDist: 0.5
+  pickNextWaypointDist: 0.61
   endReachedDistance: 0.2
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 0

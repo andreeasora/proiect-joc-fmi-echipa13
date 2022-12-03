@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform firePoint;
 
+    public int Score {get; set;}
+    public event System.Action onScoreUpdate;
+
     private Rigidbody2D rigidBody;
     private SpriteRenderer spRenderer;
 
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         spRenderer = GetComponent<SpriteRenderer>();
 
+        Score = 0;
         movementSpeed = 10.0f;
         movementDirection = Vector2.zero;
         rigidBody.gravityScale = 0.0f;
@@ -48,6 +52,8 @@ public class Player : MonoBehaviour
             spRenderer.flipX = true;
     }
 
+    public void OnScoreUpdate() => onScoreUpdate?.Invoke();
+
     public void MoveEvent(InputAction.CallbackContext context)
     {
         movementDirection = context.ReadValue<Vector2>();
@@ -58,6 +64,7 @@ public class Player : MonoBehaviour
         if (context.started)
         {
             Bullet bullet = bulletPool.Pool.Get();
+            bullet.player = this;
             bullet.transform.position = firePoint.position;
             bullet.transform.up = firePoint.up;
             bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * Bullet.bulletSpeed, ForceMode2D.Impulse);

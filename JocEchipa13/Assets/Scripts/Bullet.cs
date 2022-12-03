@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public Player player;
     public const float bulletSpeed = 30.0f;
     private const float maxActiveTime = 5.0f;
     public BulletPool BulletPool {get; set;}
@@ -23,10 +24,15 @@ public class Bullet : MonoBehaviour
         var other = collider.gameObject;
         if (other.CompareTag("Enemy"))
         {
-            Enemy enemy = other.GetComponent<Enemy>();
-            enemy.releaseEnemy();
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             BulletPool.Pool.Release(this);
+
+            // Those happen when the enemy dies.
+            Enemy enemy = other.GetComponent<Enemy>();
+            enemy.releaseEnemy();
+            player.Score += 1;
+            player.OnScoreUpdate();
+
         }
     }
 }

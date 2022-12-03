@@ -15,7 +15,7 @@ public class EnemyPool : MonoBehaviour
         get
         {
             if (pool is null)
-                pool = new ObjectPool<Enemy>(OnCreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy);
+                pool = new ObjectPool<Enemy>(OnCreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy, false);
             return pool;
         }
     }
