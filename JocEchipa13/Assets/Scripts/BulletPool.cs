@@ -11,7 +11,7 @@ public class BulletPool : MonoBehaviour
         get
         {
             if (pool is null)
-                pool = new ObjectPool<Bullet>(OnCreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet);
+                pool = new ObjectPool<Bullet>(OnCreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, false);
             return pool;
         }
     }

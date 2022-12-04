@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using Pathfinding;
 
 public class EnemyPool : MonoBehaviour
 {
+    [SerializeField] private Transform enemyTarget;
+
     private ObjectPool<Enemy> pool;
 
     public ObjectPool<Enemy> Pool
@@ -12,7 +15,7 @@ public class EnemyPool : MonoBehaviour
         get
         {
             if (pool is null)
-                pool = new ObjectPool<Enemy>(OnCreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy);
+                pool = new ObjectPool<Enemy>(OnCreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy, false);
             return pool;
         }
     }
@@ -24,6 +27,7 @@ public class EnemyPool : MonoBehaviour
         Enemy newEnemy = Instantiate(enemyPrefab);
         newEnemy.EnemyPool = this;
         newEnemy.transform.SetParent(this.transform);
+        newEnemy.GetComponent<AIDestinationSetter>().target = enemyTarget;
         return newEnemy;
     }
 

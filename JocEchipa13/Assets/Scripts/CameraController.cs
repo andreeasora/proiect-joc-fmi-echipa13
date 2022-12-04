@@ -4,24 +4,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
-    private Player player;
+    [SerializeField] private Player player;
 
-    private Camera cam;
-
-    private float cameraMinX;
-    private float cameraMaxX;
-    private float cameraMinY;
-    private float cameraMaxY;
+    private float cameraMinX, cameraMaxX, cameraMinY, cameraMaxY;
 
     void Start()
     {
-        cam = GetComponent<Camera>();
-
-        cameraMinX = -30.0f + cam.orthographicSize * cam.aspect;
-        cameraMaxX = 30.0f - cam.orthographicSize * cam.aspect;
-        cameraMinY = -30.0f + cam.orthographicSize;
-        cameraMaxY = 30.0f - cam.orthographicSize;
+        Camera cam = GetComponent<Camera>();
+        cameraMinX = Player.minX + cam.orthographicSize * cam.aspect;
+        cameraMaxX = Player.maxX - cam.orthographicSize * cam.aspect;
+        cameraMinY = Player.minY + cam.orthographicSize;
+        cameraMaxY = Player.maxY - cam.orthographicSize;
     }
 
     void LateUpdate()
