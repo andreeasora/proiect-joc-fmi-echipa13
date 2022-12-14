@@ -5,24 +5,26 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private BulletPool bulletPool;
-    [SerializeField]
-    private Transform firePoint;
-
-    public int Score {get; set;}
-    public event System.Action onScoreUpdate;
-
-    private Rigidbody2D rigidBody;
-    private SpriteRenderer spRenderer;
-
-    private Vector2 movementDirection;
-    private float movementSpeed;
-
     public const float minX = -30;
     public const float maxX = 30;
     public const float minY = -30;
     public const float maxY = 30;
+    public const int maxLives = 3;
+    
+    public int Score {get; set;}
+    public event System.Action onScoreUpdate;
+    public event System.Action onLifeLost;
+
+    [SerializeField] private BulletPool bulletPool;
+    [SerializeField] private Transform firePoint;
+    
+    private Rigidbody2D rigidBody;
+    private SpriteRenderer spRenderer;
+    private int remainingLives;
+    private bool isGhosted;
+    private IEnumerator ghostingCoroutine;
+    private Vector2 movementDirection;
+    private float movementSpeed;
 
     void Start()
     {
@@ -30,6 +32,9 @@ public class Player : MonoBehaviour
         spRenderer = GetComponent<SpriteRenderer>();
 
         Score = 0;
+        remainingLives = maxLives;
+        isGhosted = false;
+        ghostingCoroutine = null;
         movementSpeed = 10.0f;
         movementDirection = Vector2.zero;
         rigidBody.gravityScale = 0.0f;
@@ -45,11 +50,14 @@ public class Player : MonoBehaviour
             newVelocity.y = 0;
         rigidBody.velocity = newVelocity;
         
-        // Flip character so its facing the current direction
-        if (rigidBody.velocity.x > 0)
-            spRenderer.flipX = false;
-        else if (rigidBody.velocity.x < 0)
+        // Flip character so its facing the mouse pointer
+        var mousePos = Mouse.current.position.ReadValue();
+        var playerPos = Camera.main.WorldToScreenPoint(rigidBody.transform.position);
+        var playerToMouseX = mousePos.x - playerPos.x;
+        if (playerToMouseX < 0)
             spRenderer.flipX = true;
+        else
+            spRenderer.flipX = false;
     }
 
     public void OnScoreUpdate() => onScoreUpdate?.Invoke();
@@ -74,7 +82,56 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         var other = collision.gameObject;
-        if (other.CompareTag("Enemy"))
-            print("Player Hit");
+        if (other.CompareTag("Enemy") && !isGhosted) 
+        {
+            OnEnemyHitPlayer();
+            other.GetComponent<Enemy>().releaseEnemy();
+        }
+    }
+
+    void OnEnemyHitPlayer()
+    {
+        if (remainingLives == 0)
+        {
+            if (ghostingCoroutine is not null)
+            {
+                StopCoroutine(ghostingCoroutine);
+                ghostingCoroutine = null;
+            }
+            Debug.Log("Game Over!");
+        }
+        else 
+        {
+            --remainingLives;
+            ghostingCoroutine = OnPlayerGhosting();
+            StartCoroutine(ghostingCoroutine);
+            onLifeLost?.Invoke();
+        }
+    }
+
+    IEnumerator OnPlayerGhosting()
+    {
+        const float ghostingDuration = 2.0f;  // seconds
+        const int ghostingPhases = 9;
+        const int playerLayer = 8;
+        const int ghostedPlayerLayer = 9;
+        const float phaseDuration = ghostingDuration / ghostingPhases;
+
+        isGhosted = true;
+        this.gameObject.layer = ghostedPlayerLayer;
+        Color playerColor = spRenderer.color;
+        for (int i = 0; i < ghostingPhases; ++i)
+        {
+            if (playerColor.a == 1.0f)
+                playerColor.a = 0.5f;
+            else
+                playerColor.a = 1.0f;
+            spRenderer.color = playerColor;
+            yield return new WaitForSeconds(phaseDuration);
+        }
+        playerColor.a = 1.0f;
+        spRenderer.color = playerColor;
+        this.gameObject.layer = playerLayer;
+        isGhosted = false;
     }
 }

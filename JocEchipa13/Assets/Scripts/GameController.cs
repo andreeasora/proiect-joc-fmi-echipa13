@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Pathfinding;
 
 using Random = UnityEngine.Random;
 
@@ -28,12 +30,23 @@ public class GameController : MonoBehaviour
 
     private float lastEnemySpawn = 0;
 
+    public static String MapSceneName {get; set;} = null;
+
+    private void Awake() {
+        if (MapSceneName is not null)
+            SceneManager.LoadScene(MapSceneName, LoadSceneMode.Additive);
+    }
+
     private void OnEnable() {
         Instance = this;
     }
 
     private void OnDisable() {
         Instance = null;
+    }
+
+    private void Start() {
+        AstarPath.active.Scan();
     }
 
     private void Update() {
