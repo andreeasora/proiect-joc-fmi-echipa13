@@ -33,6 +33,7 @@ public class EnemyPool : MonoBehaviour
 
     void OnGetEnemy(Enemy enemy){
         enemy.gameObject.SetActive(true);
+        enemy.SetHealth();
     }
 
     void OnReleaseEnemy(Enemy enemy){

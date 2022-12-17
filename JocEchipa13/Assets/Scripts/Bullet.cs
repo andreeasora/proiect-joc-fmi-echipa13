@@ -10,6 +10,9 @@ public class Bullet : MonoBehaviour
     public BulletPool BulletPool {get; set;}
     private float currentActiveTime;
 
+    [SerializeField]
+    private float bulletDamage = 1;
+
     void OnEnable() => currentActiveTime = 0;
 
     void Update()
@@ -29,9 +32,10 @@ public class Bullet : MonoBehaviour
 
             // Those happen when the enemy dies.
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.releaseEnemy();
-            player.Score += 1;
-            player.OnScoreUpdate();
+            enemy.takeHit(bulletDamage, player);
+            // enemy.releaseEnemy();
+            // player.Score += 1;
+            // player.OnScoreUpdate();
 
         }
     }

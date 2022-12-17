@@ -26,6 +26,10 @@ public class Player : MonoBehaviour
     private Vector2 movementDirection;
     private float movementSpeed;
 
+    public Player getInstance() {
+        return this;
+    }
+
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
