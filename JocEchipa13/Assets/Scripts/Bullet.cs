@@ -30,13 +30,8 @@ public class Bullet : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             BulletPool.Pool.Release(this);
 
-            // Those happen when the enemy dies.
             Enemy enemy = other.GetComponent<Enemy>();
             enemy.takeHit(bulletDamage, player);
-            // enemy.releaseEnemy();
-            // player.Score += 1;
-            // player.OnScoreUpdate();
-
         }
     }
 }
