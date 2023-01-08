@@ -515,7 +515,10 @@ MonoBehaviour:
   - enemyPool: {fileID: 808070959}
     Chance: 0.1
   enemySpawnWaveDelay: 1
-  enemiesNumberWave: 3
+  enemiesNumberWave: 1
+  enemyIncreaseRate: 1
+  increaseEnemyDelay: 30
+  maxEnemiesSpawnRate: 10
 --- !u!4 &649402600
 Transform:
   m_ObjectHideFlags: 0
