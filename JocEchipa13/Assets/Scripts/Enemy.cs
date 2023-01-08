@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D rb;
     public EnemyPool EnemyPool {get; set;}
 
+    public int enemyScoreValue = 1;
+
     private float hitpoints;
     [SerializeField]
     private float maxHitpoints = 5;
@@ -39,7 +41,7 @@ public class Enemy : MonoBehaviour
 
         if (hitpoints <= 0) {
             releaseEnemy();
-            player.Score += 1;
+            player.Score += enemyScoreValue;
             player.OnScoreUpdate();
         }
     }
