@@ -32,8 +32,17 @@ public class GameController : MonoBehaviour
     private float enemySpawnWaveDelay = 5.0f;
     [SerializeField]
     private int enemiesNumberWave = 10;
-
     private float lastEnemySpawn = 0;
+    [SerializeField]
+    private int enemyIncreaseRate = 1;
+    [SerializeField]
+    private float increaseEnemyDelay = 10.0f;
+    private float lastEnemyIncrease = 0;
+
+    [SerializeField]
+    private int maxEnemiesSpawnRate = 10;
+
+    
 
     public static String MapSceneName {get; set;} = null;
 
@@ -58,7 +67,15 @@ public class GameController : MonoBehaviour
         if (Time.time - lastEnemySpawn > enemySpawnWaveDelay) {
             lastEnemySpawn = Time.time;
             for (int i = 0; i < enemiesNumberWave; ++i){
-                SpawnEnemy();
+                if (FindObjectsOfType<Enemy>().Length < 200)
+                    SpawnEnemy();
+            }
+        }
+        if (Time.time - lastEnemyIncrease > increaseEnemyDelay && enemiesNumberWave < maxEnemiesSpawnRate) {
+            lastEnemyIncrease = Time.time;
+            enemiesNumberWave += enemyIncreaseRate;
+            if (enemiesNumberWave > maxEnemiesSpawnRate) {
+                enemiesNumberWave = maxEnemiesSpawnRate;
             }
         }
     }
