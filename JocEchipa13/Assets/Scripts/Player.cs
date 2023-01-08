@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     void OnEnemyHitPlayer()
     {
-        if (remainingLives == 0)
+        if (remainingLives == 1)
         {
             if (ghostingCoroutine is not null)
             {
