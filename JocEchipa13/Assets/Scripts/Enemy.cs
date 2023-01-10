@@ -43,6 +43,9 @@ public class Enemy : MonoBehaviour
             releaseEnemy();
             player.Score += enemyScoreValue;
             player.OnScoreUpdate();
+
+            HighScoreManager highScoreManager = FindObjectOfType<HighScoreManager>();
+            highScoreManager.SaveHighScore(player.Score);
         }
     }
 
