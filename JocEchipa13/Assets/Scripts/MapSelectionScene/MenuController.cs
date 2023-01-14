@@ -17,4 +17,8 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene("GameCore", LoadSceneMode.Single);
     }
 
+    public void OnClickOptions()
+    {
+        SceneManager.LoadScene("Options", LoadSceneMode.Single);
+    }
 }
