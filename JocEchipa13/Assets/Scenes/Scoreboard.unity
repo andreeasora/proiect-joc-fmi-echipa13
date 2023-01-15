@@ -212,6 +212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18b74bb8ed5a5f4f857cd304119f953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas_scoreboard: {fileID: 0}
+  canvas_save_score: {fileID: 0}
 --- !u!114 &677629710
 MonoBehaviour:
   m_ObjectHideFlags: 0

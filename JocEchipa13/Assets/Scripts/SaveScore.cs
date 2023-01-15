@@ -9,17 +9,25 @@ public class SaveScore : MonoBehaviour
 {
     public InputField usernameInput;
     public bool alreadyName;
-    private string user;	  
-    private ScoreboardEntryData EntryData = new ScoreboardEntryData();
-   
+    private string user="Guest";	  
+    private Transform playerObj;
 
-
-    public void saveScore()
+    public void readName(string us)
     {
-	EntryData.entryName = "user";
-	EntryData.entryScore = 4;
-	//Scoreboard scoreboard = FindObjectOfType<Scoreboard>();
-	//scoreboard.AddEntry(EntryData); 		
-	SceneManager.LoadScene("LoseScreen", LoadSceneMode.Single);
+	user = us;
+	Debug.Log(user);
+    }	
+    public void saveScore()
+    {	
+ 	  int currentScore = PlayerPrefs.GetInt("score", 0);
+        ScoreboardEntryData EntryData = new ScoreboardEntryData();
+        EntryData.entryName = user;
+	  EntryData.entryScore = currentScore;
+	  if(currentScore != 0){
+		Scoreboard scoreboard = new Scoreboard(); 
+	  	scoreboard.AddEntry(EntryData);
+	  }
+	  		
+	  SceneManager.LoadScene("LoseScreen", LoadSceneMode.Single);
     }
 }

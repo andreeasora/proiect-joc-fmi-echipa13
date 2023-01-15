@@ -74,7 +74,7 @@ namespace ScoreboardLogic.Scoreboards
                     savedScores.highscores.Count - maxScoreboardEntries);
             }
 
-            UpdateUi(savedScores);
+            //UpdateUi(savedScores);
             SaveScores(savedScores);
         }
 
