@@ -23,5 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Options.unity
     guid: 074b1b358383af643b37e3fa31529050
-
+  - enabled: 1
+    path: Assets/Scenes/SaveScore.unity
+    guid: a61f4e04b3db3534795a20d7c4084c25
+  - enabled: 1
+    path: Assets/Scenes/Scoreboard.unity
+    guid: 41fc58f8e9b49074aaa0f81fc8de6880
   m_configObjects: {}
