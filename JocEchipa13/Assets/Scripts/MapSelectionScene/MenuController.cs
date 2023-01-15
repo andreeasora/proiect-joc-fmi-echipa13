@@ -16,5 +16,10 @@ public class MenuController : MonoBehaviour
         GameController.MapSceneName = "Map_2";
         SceneManager.LoadScene("GameCore", LoadSceneMode.Single);
     }
+    public void OnClickScoreboard()
+    {
+        SceneManager.LoadScene("Scoreboard", LoadSceneMode.Single);
+    }
+	
 
 }
