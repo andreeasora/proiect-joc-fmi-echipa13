@@ -22,4 +22,8 @@ public class MenuController : MonoBehaviour
     }
 	
 
+    public void OnClickOptions()
+    {
+        SceneManager.LoadScene("Options", LoadSceneMode.Single);
+    }
 }
