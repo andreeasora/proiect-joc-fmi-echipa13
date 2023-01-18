@@ -14,4 +14,6 @@ public class Weapon : MonoBehaviour
         float anglesToRotate = Mathf.Atan2(playerToMouse.y, playerToMouse.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, anglesToRotate);
     }
+
+    
 }
