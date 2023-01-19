@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+
 public class Player : MonoBehaviour
 {
     public const float minX = -30;
@@ -11,19 +12,29 @@ public class Player : MonoBehaviour
     public const float minY = -30;
     public const float maxY = 30;
     public const int maxLives = 3;
+    public const int maxWeapon2Ammo = 20;
     
     public int Score {get; set;}
+    public int WeaponType {get; private set;}
+    public int Weapon2Ammo {get; private set;}
     public event System.Action onScoreUpdate;
     public event System.Action onLifeLost;
+    public event System.Action onWeaponChange;
+    public event System.Action onAmmoUpdate;
 
     [SerializeField] private BulletPool bulletPool;
     [SerializeField] private Transform firePoint;
-    
+    [SerializeField] private Sprite weaponGreen, weaponRed;
+    [SerializeField] private SpriteRenderer weaponSpriteRenderer;
+
+    private const float ammoRechargeDelay = 1.5f;  // in seconds
+
     private Rigidbody2D rigidBody;
     private SpriteRenderer spRenderer;
     private int remainingLives;
     private bool isGhosted;
     private IEnumerator ghostingCoroutine;
+    private float rechargeElapsedTime;
     private Vector2 movementDirection;
     private float movementSpeed;
 
@@ -31,7 +42,7 @@ public class Player : MonoBehaviour
         return this;
     }
 
-    void Start()
+    void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         spRenderer = GetComponent<SpriteRenderer>();
@@ -43,6 +54,26 @@ public class Player : MonoBehaviour
         movementSpeed = 10.0f;
         movementDirection = Vector2.zero;
         rigidBody.gravityScale = 0.0f;
+        
+        WeaponType = 1;
+        weaponSpriteRenderer.sprite = weaponGreen;
+        Weapon2Ammo = maxWeapon2Ammo;
+        rechargeElapsedTime = 0.0f;
+    }
+
+    void Update()
+    {
+        // Recharge ammo for weapon 2
+        if (Weapon2Ammo < maxWeapon2Ammo)
+        {
+            rechargeElapsedTime += Time.deltaTime;
+            if (rechargeElapsedTime >= ammoRechargeDelay)
+            {
+                Weapon2Ammo += 1;
+                rechargeElapsedTime = 0.0f;
+                onAmmoUpdate?.Invoke();
+            }
+        }
     }
 
     void FixedUpdate()
@@ -76,15 +107,39 @@ public class Player : MonoBehaviour
     {
         if (context.started)
         {
-            Bullet bullet = bulletPool.Pool.Get();
-            bullet.player = this;
-            bullet.transform.position = firePoint.position;
-            bullet.transform.up = firePoint.up;
-            bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * Bullet.bulletSpeed, ForceMode2D.Impulse);
+            if (WeaponType == 1)
+                FireBullet(firePoint.up);
+            else if (WeaponType == 2)
+            {
+                if (Weapon2Ammo == 0)
+                    return;
+
+                const float angleBetweenBulletDirs = 15.0f;
+                FireBullet(Quaternion.AngleAxis(angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
+                FireBullet(firePoint.up);
+                FireBullet(Quaternion.AngleAxis(-angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
+                
+                Weapon2Ammo -= 1;
+                onAmmoUpdate?.Invoke();
+            }
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public void SwitchWeaponEvent(InputAction.CallbackContext context)
+    {
+        // Weapon types are 1 and 2. Each call will swap used type.
+        if (context.started)
+        {
+            WeaponType = 3 - WeaponType;
+            if (WeaponType == 1) 
+                weaponSpriteRenderer.sprite = weaponGreen;
+            else 
+                weaponSpriteRenderer.sprite = weaponRed;
+            onWeaponChange?.Invoke();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         var other = collision.gameObject;
         if (other.CompareTag("Enemy") && !isGhosted) 
@@ -94,7 +149,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnEnemyHitPlayer()
+    private void OnEnemyHitPlayer()
     {
         if (remainingLives == 1)
         {
@@ -115,7 +170,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator OnPlayerGhosting()
+    private IEnumerator OnPlayerGhosting()
     {
         const float ghostingDuration = 2.0f;  // seconds
         const int ghostingPhases = 9;
@@ -139,5 +194,14 @@ public class Player : MonoBehaviour
         spRenderer.color = playerColor;
         this.gameObject.layer = playerLayer;
         isGhosted = false;
+    }
+
+    private void FireBullet(Vector3 bulletDirection)
+    {
+        Bullet bullet = bulletPool.Pool.Get();
+        bullet.player = this;
+        bullet.transform.position = firePoint.position;
+        bullet.transform.up = bulletDirection;
+        bullet.GetComponent<Rigidbody2D>().AddForce(bulletDirection * Bullet.bulletSpeed, ForceMode2D.Impulse);
     }
 }
