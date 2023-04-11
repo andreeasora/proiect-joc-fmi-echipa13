@@ -12,7 +12,7 @@ public class GameCameraUI : MonoBehaviour
     [SerializeField] Sprite emptyHeartSprite;
     [SerializeField] private Image usedWeapon;
     [SerializeField] private TMP_Text ammoText;
-    [SerializeField] private Sprite weaponGreen, weaponRed;
+    [SerializeField] private Sprite weaponGreen, weaponRed, weaponPurple;
 
     int lastFilledHeartIdx;
 
@@ -35,21 +35,28 @@ public class GameCameraUI : MonoBehaviour
 
     void UpdateUsedWeapon()
     {
-        if (player.WeaponType == 1)
+        switch (player.WeaponType)
         {
-            usedWeapon.sprite = weaponGreen;
-            ammoText.text = "INF";
-        }
-        else
-        {
-            usedWeapon.sprite = weaponRed;
-            ammoText.text = player.Weapon2Ammo.ToString() + " / " + Player.maxWeapon2Ammo.ToString();
+            case 0:
+                usedWeapon.sprite = weaponGreen;
+                ammoText.text = "INF";
+                break;
+            case 1:
+                usedWeapon.sprite = weaponRed;
+                ammoText.text = player.Weapon2Ammo.ToString() + " / " + Player.maxWeapon2Ammo.ToString();
+                break;
+            case 2:
+                usedWeapon.sprite = weaponPurple;
+                ammoText.text = (player.Weapon3Ready ? "1 / 1" : "0 / 1");
+                break;
         }
     }
 
     void UpdateAmmo()
     {
-        if (player.WeaponType == 2)
+        if (player.WeaponType == 1)
             ammoText.text = player.Weapon2Ammo.ToString() + " / " + Player.maxWeapon2Ammo.ToString();
+        else if (player.WeaponType == 2)
+            ammoText.text = (player.Weapon3Ready ? "1 / 1" : "0 / 1");
     }
 }

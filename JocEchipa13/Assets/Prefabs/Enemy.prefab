@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d3e45790fac1342be92ce5be056019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyScoreValue: 1
   maxHitpoints: 2
   healthbar: {fileID: 8104911239750605991}
 --- !u!114 &4694770084175474971
@@ -203,7 +204,7 @@ MonoBehaviour:
     maximumInterval: 2
     visualizeSensitivity: 0
   targetCompatibility: {fileID: 0}
-  maxAcceleration: 1000000
+  maxAcceleration: 10000
   rotationSpeed: 360
   slowdownDistance: 0.6
   pickNextWaypointDist: 0.62
