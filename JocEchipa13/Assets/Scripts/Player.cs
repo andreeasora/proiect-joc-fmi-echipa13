@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-
 public class Player : MonoBehaviour
 {
     public const float minX = -30;
@@ -12,19 +11,22 @@ public class Player : MonoBehaviour
     public const float minY = -30;
     public const float maxY = 30;
     public const int maxLives = 3;
+    public const int noWeapons = 3;
     public const int maxWeapon2Ammo = 20;
     
     public int Score {get; set;}
     public int WeaponType {get; private set;}
     public int Weapon2Ammo {get; private set;}
+    public bool Weapon3Ready {get; private set;}
     public event System.Action onScoreUpdate;
     public event System.Action onLifeLost;
     public event System.Action onWeaponChange;
     public event System.Action onAmmoUpdate;
 
     [SerializeField] private BulletPool bulletPool;
+    [SerializeField] private GameObject blackHolePrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Sprite weaponGreen, weaponRed;
+    [SerializeField] private Sprite weaponGreen, weaponRed, weaponPurple;
     [SerializeField] private SpriteRenderer weaponSpriteRenderer;
 
     private const float ammoRechargeDelay = 1.5f;  // in seconds
@@ -37,10 +39,6 @@ public class Player : MonoBehaviour
     private float rechargeElapsedTime;
     private Vector2 movementDirection;
     private float movementSpeed;
-
-    public Player getInstance() {
-        return this;
-    }
 
     void Awake()
     {
@@ -55,9 +53,10 @@ public class Player : MonoBehaviour
         movementDirection = Vector2.zero;
         rigidBody.gravityScale = 0.0f;
         
-        WeaponType = 1;
+        WeaponType = 0;
         weaponSpriteRenderer.sprite = weaponGreen;
         Weapon2Ammo = maxWeapon2Ammo;
+        Weapon3Ready = true;
         rechargeElapsedTime = 0.0f;
     }
 
@@ -107,34 +106,63 @@ public class Player : MonoBehaviour
     {
         if (context.started)
         {
-            if (WeaponType == 1)
-                FireBullet(firePoint.up);
-            else if (WeaponType == 2)
+            switch (WeaponType)
             {
-                if (Weapon2Ammo == 0)
-                    return;
+                case 0:
+                    FireBullet(firePoint.up);
+                    break;
+                case 1:
+                    if (Weapon2Ammo == 0)
+                        return;
 
-                const float angleBetweenBulletDirs = 15.0f;
-                FireBullet(Quaternion.AngleAxis(angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
-                FireBullet(firePoint.up);
-                FireBullet(Quaternion.AngleAxis(-angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
-                
-                Weapon2Ammo -= 1;
-                onAmmoUpdate?.Invoke();
+                    const float angleBetweenBulletDirs = 15.0f;
+                    FireBullet(Quaternion.AngleAxis(angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
+                    FireBullet(firePoint.up);
+                    FireBullet(Quaternion.AngleAxis(-angleBetweenBulletDirs, Vector3.forward) * firePoint.up);
+                    
+                    Weapon2Ammo -= 1;
+                    onAmmoUpdate?.Invoke();
+                    break;
+                case 2:
+                    if (!Weapon3Ready)
+                        return;
+
+                    Vector3 blackHolePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+                    blackHolePosition.z = 0.0f;
+                    var blackHole = Instantiate(blackHolePrefab, blackHolePosition, Quaternion.identity).GetComponent<BlackHole>();
+                    blackHole.Creator = this;
+                    Weapon3Ready = false;
+
+                    onAmmoUpdate?.Invoke();
+                    Invoke("SetWeapon3Ready", BlackHole.duration);
+                    break;
             }
         }
     }
 
     public void SwitchWeaponEvent(InputAction.CallbackContext context)
     {
-        // Weapon types are 1 and 2. Each call will swap used type.
         if (context.started)
         {
-            WeaponType = 3 - WeaponType;
-            if (WeaponType == 1) 
-                weaponSpriteRenderer.sprite = weaponGreen;
-            else 
-                weaponSpriteRenderer.sprite = weaponRed;
+            float mouseScrollValue = context.ReadValue<float>();
+            if (mouseScrollValue > 0)
+                WeaponType = (WeaponType + 1) % noWeapons;
+            else if (mouseScrollValue < 0)
+                WeaponType = (WeaponType - 1 + noWeapons) % noWeapons;
+            
+            switch (WeaponType)
+            {
+                case 0:
+                    weaponSpriteRenderer.sprite = weaponGreen;
+                    break;
+                case 1:
+                    weaponSpriteRenderer.sprite = weaponRed;
+                    break;
+                case 2:
+                    weaponSpriteRenderer.sprite = weaponPurple;
+                    break;
+            }
+
             onWeaponChange?.Invoke();
         }
     }
@@ -203,5 +231,11 @@ public class Player : MonoBehaviour
         bullet.transform.position = firePoint.position;
         bullet.transform.up = bulletDirection;
         bullet.GetComponent<Rigidbody2D>().AddForce(bulletDirection * Bullet.bulletSpeed, ForceMode2D.Impulse);
+    }
+
+    private void SetWeapon3Ready()
+    {
+        Weapon3Ready = true;
+        onAmmoUpdate?.Invoke();
     }
 }
