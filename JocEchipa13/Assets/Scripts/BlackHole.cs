@@ -59,8 +59,11 @@ public class BlackHole : MonoBehaviour
     {
         foreach (var (enemyGO, (aiComp, _)) in affectedEnemies)
         {
-            enemyGO.GetComponent<Enemy>().takeHit(damageDealt, Creator);
-            aiComp.updatePosition = true;
+            if (enemyGO != null)
+            {
+                enemyGO.GetComponent<Enemy>().takeHit(damageDealt, Creator);
+                aiComp.updatePosition = true;
+            }
         }
     }
 }
