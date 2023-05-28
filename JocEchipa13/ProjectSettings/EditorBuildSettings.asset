@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Options.unity
     guid: 074b1b358383af643b37e3fa31529050
   - enabled: 1
+    path: Assets/Scenes/HowToPlay.unity
+    guid: 9079e63dd1450ce4ba2fcf694ca57753
+  - enabled: 1
     path: Assets/Scenes/SaveScore.unity
     guid: a61f4e04b3db3534795a20d7c4084c25
   - enabled: 1
