@@ -2199,9 +2199,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPool: {fileID: 1057252687}
+  blackHolePrefab: {fileID: 2168904943727949239, guid: c8fe3ab6fcd8b8b4f9e8e5076e073ff2, type: 3}
   firePoint: {fileID: 749915327}
   weaponGreen: {fileID: 21300000, guid: eeff3d3cc8dd0104eab1db9f700fe940, type: 3}
   weaponRed: {fileID: 21300000, guid: f936c1b40d76e994f80c4542fc799aa8, type: 3}
+  weaponPurple: {fileID: 21300000, guid: 189420910a3dd3c4983b33e547138cb1, type: 3}
   weaponSpriteRenderer: {fileID: 461536776}
 --- !u!114 &1776934049
 MonoBehaviour:
@@ -2561,3 +2563,4 @@ MonoBehaviour:
   ammoText: {fileID: 1281190225}
   weaponGreen: {fileID: 21300000, guid: eeff3d3cc8dd0104eab1db9f700fe940, type: 3}
   weaponRed: {fileID: 21300000, guid: f936c1b40d76e994f80c4542fc799aa8, type: 3}
+  weaponPurple: {fileID: 21300000, guid: 189420910a3dd3c4983b33e547138cb1, type: 3}
